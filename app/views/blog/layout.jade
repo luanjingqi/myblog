@@ -1,0 +1,61 @@
+extends ../layout
+
+append css
+    link(rel='stylesheet',href='/css/blog.css')
+
+block main
+    block header
+        .blog-masthead
+            .container
+                nav.blog-nav
+                    if pageName === '/'
+                        a.blog-nav-item.active(href="/") 首页
+                    else
+                        a.blog-nav-item(href="/") 首页
+                    if pageName === '/about'
+                        a.blog-nav-item.active(href="/about") 分类
+                    else
+                        a.blog-nav-item(href="/about") 分类
+                    if pageName === '/contact'
+                        a.blog-nav-item.active(href="/contact") 联系
+                    else
+                        a.blog-nav-item(href="/contact") 联系    
+    .container
+        .row
+            .col-sm-8.blog-main
+                block content
+            .col-sm-3.col-sm-offset-1.blog-sidebar
+                .sidebar-module.sidebar-module-inset
+                    h4 关于我           
+                    p
+                      | 介绍
+                      em 相关介绍
+                      |  巴拉巴拉一大堆        
+                .sidebar-module
+                    h4 文章分类
+                        ol.list-unstyled
+                            li
+                                a(href="#") March 2014            
+                            li
+                                a(href="#") February 2014             
+                            li
+                                a(href="#") January 2014             
+                            li
+                                a(href="#") December 2013             
+                            li
+                                a(href="#") November 2013
+                .sidebar-module             
+                    h4 Elsewhere             
+                        ol.list-unstyled
+                            li
+                                a(href="#") GitHub              
+                            li
+                                a(href="#") Twitte                               
+                            li
+                                a(href="#") Facebook
+
+    block footer
+        footer.blog-footer
+            p NodeBlog  By luanjingqi@126.com
+            p
+                a(href="#") Back to top

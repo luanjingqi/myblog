@@ -4,30 +4,16 @@ var express = require('express'),
   Article = mongoose.model('Article');
 
 module.exports = function (app) {
-  app.use('/', router);
+  app.use('/admin', router);
 };
 
 router.get('/', function (req, res, next) {
   Article.find(function (err, articles) {
     if (err) return next(err);
-    res.render('blog/index', {
-        title: 'NodeBlog',
+    res.render('admin/index', {
+        title: 'Admin index',
         articles: articles,
         pretty: true,
       });
-    });
-});
-
-router.get('/about', function (req, res, next) {
-    res.render('blog/index', {
-      title: 'About Me',
-      pretty: true,
-    });
-});
-
-router.get('/contact', function (req, res, next) {
-    res.render('blog/index', {
-      title: 'Contact',
-      pretty: true,
     });
 });

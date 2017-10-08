@@ -1,21 +1,13 @@
 var express = require('express'),
-  router = express.Router(),
-  mongoose = require('mongoose'),
-  Article = mongoose.model('Article');
+    router = express.Router();
+
 
 module.exports = function (app) {
   app.use('/', router);
 };
 
 router.get('/', function (req, res, next) {
-  Article.find(function (err, articles) {
-    if (err) return next(err);
-    res.render('blog/index', {
-        title: 'NodeBlog',
-        articles: articles,
-        pretty: true,
-      });
-    });
+  res.redirect('/posts')
 });
 
 router.get('/about', function (req, res, next) {

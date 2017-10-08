@@ -9,7 +9,7 @@ var config = {
       name: 'mybolg'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/mybolg-development'
+    db: 'mongodb://localhost/nodeblog'
   },
 
   test: {
@@ -18,7 +18,7 @@ var config = {
       name: 'mybolg'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/mybolg-test'
+    db: 'mongodb://localhost/nodeblog'
   },
 
   production: {
@@ -27,7 +27,7 @@ var config = {
       name: 'mybolg'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/mybolg-production'
+    db: 'mongodb://localhost/nodeblog'
   }
 };
 

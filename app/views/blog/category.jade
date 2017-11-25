@@ -1,11 +1,15 @@
 extends layout
 
 block content
-    h2.page-header Luan的博客
+    h2.page-header
+        = category.name
+        分类下&nbsp;共
+        = posts.length
+        &nbsp;篇文章
     each post in posts
         div.post
             h3.post-title
-                a(href="/posts/view/" + post.slug,target="_blank")
+                a(href=("/posts/view/"+post._id, target="_blank"))
                     =post.title
             div.post-abstract
                 =truncate(post.content,160)
@@ -27,22 +31,4 @@ block content
                     |被赞:
                     =post.meta.favorite || 0
                 span.post-link
-                    a(href="/posts/view/"+post.slug, target="_blank") 查看原文
-
-    if pageCount > 1
-        nav
-            ul.pagination
-                - var currentPage = 1
-                while currentPage < pageCount
-                    if (currentPage === pageNum)
-                        li.active
-                            a(href="/posts?page=" + currentPage)=currentPage++
-                    else
-                        li
-                            a(href="/posts?page=" + currentPage)=currentPage++
-
-
-
-
-block scripts
-    script $(document).ready(function (){ console.log('dom is ready')});
+                    a(href=("/posts/view/"+post._id, target="_blank")) 查看原文

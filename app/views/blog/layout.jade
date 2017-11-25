@@ -2,6 +2,7 @@ extends ../layout
 
 append css
     link(rel='stylesheet',href='/css/blog.css')
+    link(rel='stylesheet',href='/components/font-awesome//css/font-awesome.css')
 
 block main
     block header
@@ -23,6 +24,7 @@ block main
     .container
         .row
             .col-sm-8.blog-main
+                != messages()
                 block content
             .col-sm-3.col-sm-offset-1.blog-sidebar
                 .sidebar-module.sidebar-module-inset
@@ -33,17 +35,10 @@ block main
                       |  巴拉巴拉一大堆        
                 .sidebar-module
                     h4 文章分类
-                        ol.list-unstyled
+                    ol.list-unstyled
+                        each category in categories
                             li
-                                a(href="#") March 2014            
-                            li
-                                a(href="#") February 2014             
-                            li
-                                a(href="#") January 2014             
-                            li
-                                a(href="#") December 2013             
-                            li
-                                a(href="#") November 2013
+                                a(href="/posts/category/" + category.name,target="_blank")=category.name
                 .sidebar-module             
                     h4 Elsewhere             
                         ol.list-unstyled

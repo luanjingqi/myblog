@@ -157,8 +157,9 @@ h6, .h6 {
 }
 .post-meta>span{
     display: inline-block;
-    margin: 0 5px;
-    border-right: 1px dotted #DDDDDD
+    margin: 0 13px;
+    border-right: 4px dotted #DDDDDD;
+    padding-right: 21px;
 }
 .post-meta>span:first-of-type{
     margin-left: 0;
@@ -166,6 +167,18 @@ h6, .h6 {
 .post-meta>span:last-of-type{
     margin-left: 0;
     border-right: 0;
+}
+.post-comments,
+.post-comment-form{
+    margin-top: 30px;
+}
+.post-comment-item{
+    border: 1px dotted #DDDDDD;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.post-comment-email{
+    border-bottom: 1px dotted #DDDDDD;
 }
 /*
  * Footer
@@ -181,4 +194,17 @@ h6, .h6 {
 }
 .blog-footer p:last-child {
     margin-bottom: 0;
+}
+.post-view .post-meta{
+    border-bottom: 1px dotted #DDDDDD;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.post-view .post-content{
+    text-indent: 2em;
+    text-align: justify;
+}
+.post-view-header{
+    text-align: center;
 }

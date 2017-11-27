@@ -2,6 +2,7 @@ var express = require('express'),
     router = express.Router(),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
+    User = mongoose.model('User'),
     Category = mongoose.model('Category')
 
 module.exports = function (app) {
@@ -22,28 +23,45 @@ router.get('/', function (req, res, next) {
     var sortObj = {};
     sortObj[sortby] = sortdir;
 
-    Post.find({ published:true })
-    .sort(sortObj)
-    .populate('author')
-    .populate('category')
-    .exec(function (err, posts) {       
+    var conditions = {};
+    if (req.query.category) {
+        conditions.category = req.query.category.trim();
+    }
+    if (req.query.author) {
+        conditions.author = req.query.author.trim();
+    }
+
+    User.find({}, function (err, authors) {
         if (err) return next(err);
 
-        var pageNum = Math.abs(parseInt(req.query.page || 1,10));
-        var pageSize = 10;
-        var totalCount = posts.length;
-        var pageCount = Math.ceil(totalCount / pageSize);
+        Post.find(conditions)
+        .sort(sortObj)
+        .populate('author')
+        .populate('category')
+        .exec(function (err, posts) {       
+            if (err) return next(err);
 
-        if (pageNum > pageCount){
-            pageNum = pageCount;
-        }
-        res.render('admin/post/index', {
-            posts:posts.slice((pageNum - 1) * pageSize, pageNum * pageSize),
-            pageNum:pageNum,
-            pageCount:pageCount,
-            sortdir: sortdir,
-            sortby: sortby,
-            pretty: true,
+            var pageNum = Math.abs(parseInt(req.query.page || 1,10));
+            var pageSize = 10;
+            var totalCount = posts.length;
+            var pageCount = Math.ceil(totalCount / pageSize);
+
+            if (pageNum > pageCount){
+                pageNum = pageCount;
+            }
+            res.render('admin/post/index', {
+                posts:posts.slice((pageNum - 1) * pageSize, pageNum * pageSize),
+                pageNum:pageNum,
+                pageCount:pageCount,
+                authors: authors,
+                sortdir: sortdir,
+                sortby: sortby,
+                pretty: true,
+                filter: {
+                    category: req.query.category || "",
+                    author: req.query.author || "",
+                }
+            });
         });
     });
 });
@@ -105,4 +123,4 @@ router.get('/add', function (req, res, next) {
 
 router.get('/add', function (req, res, next) {
     
-});
+}); 

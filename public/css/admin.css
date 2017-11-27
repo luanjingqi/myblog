@@ -67,7 +67,9 @@ body {
   color: #fff;
   background-color: #428bca;
 }
-
+.form-filter{
+  margin-bottom: 20px;
+}
 
 /*
  * Main content

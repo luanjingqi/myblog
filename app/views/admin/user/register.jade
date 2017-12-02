@@ -1,0 +1,20 @@
+extends ../layout_user
+
+block content
+    form.form-signin.form-register(method="post", action="/admin/users/register")
+        
+        h2.form-signin-heading 管理员注册
+            small.pull-right
+                    a(href="/admin/users/login") 登录
+        != messages()
+
+        label.sr-only(for="email") Email address
+        input.email.form-control(name="email", type="email", placeholder="Email address")
+
+        label.sr-only(for="password") Password
+        input.password.form-control(name="password", type="password", placeholder="Password")
+
+        label.sr-only(for="confirmPassword") Password 
+        input.password.form-control(name="confirmPassword", type="password", placeholder="Password")
+            
+        button.btn.btn-lg.btn-primary.btn-block(type="submit") 注册

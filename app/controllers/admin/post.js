@@ -3,13 +3,16 @@ var express = require('express'),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
-    Category = mongoose.model('Category')
+    Category = mongoose.model('Category'),
+    slug = require('slug'),
+    pinyin = require('pinyin'),
+    auth = require('./user')
 
 module.exports = function (app) {
     app.use('/admin/posts', router);
 };
 
-router.get('/', function (req, res, next) {
+router.get('/', auth.requireLogin, function (req, res, next) {
     var sortby = req.query.sortby ? req.query.sortby : 'created';
     var sortdir = req.query.sortdir ? req.query.sortdir : 'desc';
 
@@ -29,6 +32,10 @@ router.get('/', function (req, res, next) {
     }
     if (req.query.author) {
         conditions.author = req.query.author.trim();
+    }
+    if (req.query.keyword) {
+        conditions.title = new RegExp(req.query.keyword.trim(), 'i');
+        conditions.content = new RegExp(req.query.keyword.trim(), 'i');
     }
 
     User.find({}, function (err, authors) {
@@ -60,13 +67,14 @@ router.get('/', function (req, res, next) {
                 filter: {
                     category: req.query.category || "",
                     author: req.query.author || "",
+                    keyword: req.query.keyword || "",
                 }
             });
         });
     });
 });
 
-router.get('/category/:name', function (req, res, next) {
+router.get('/category/:name', auth.requireLogin, function (req, res, next) {
     Category.findOne({ name: req.params.name}).exec(function(err, category) {
         if(err) {
             return next(err);
@@ -89,14 +97,41 @@ router.get('/category/:name', function (req, res, next) {
     });
 });
 
-router.get('/edit/:id', function (req, res, next) {
+router.get('/edit/:id', auth.requireLogin, getPostById, function (req, res, next) {
+    res.render('admin/post/add', {
+        action: "/admin/posts/edit/" + req.post._id,
+        post: req.post,
+    });
 });
 
-router.post('/edit/:id', function (req, res, next) {
+router.post('/edit/:id', auth.requireLogin, getPostById, function (req, res, next) {
+    var post = req.post;
+    var title = req.body.title.trim();
+    var category = req.body.category.trim();
+    var content = req.body.content.trim();
 
+    var py = pinyin(title).map(function (item) {
+        return item[0]
+    }).join(' ');
+
+    post.title = title;
+    post.category = category;
+    post.content = content;
+    post.slug = slug(py);
+
+    post.save(function(err, post) {
+        if (err) {
+            req.flash('error', '文章编辑失败');
+            res.redirect('/admin/posts/edit/' + post._id);
+        } else {
+            req.flash('info', '文章编辑成功');
+            res.redirect('/admin/posts');
+        }
+        
+    });
 });
 
-router.get('/delete/:id', function (req, res, next) {
+router.get('/delete/:id', auth.requireLogin, function (req, res, next) {
     if(!req.params.id) {
         return next(new Error('no post id provided'))
     }
@@ -115,12 +150,84 @@ router.get('/delete/:id', function (req, res, next) {
     });
 });
 
-router.get('/add', function (req, res, next) {
+router.get('/add', auth.requireLogin, function (req, res, next) {
     res.render('admin/post/add', {
+        action: "/admin/posts/add",
         pretty: true,
+        post: {
+            category: { _id: ''}
+        },
     });
 });
 
-router.get('/add', function (req, res, next) {
-    
+router.post('/add', auth.requireLogin, function (req, res, next) {
+    req.checkBody('title', '文章标题不能为空').notEmpty();
+    req.checkBody('category', '请选择分类').notEmpty();
+    req.checkBody('content', '内容不能为空').notEmpty();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        return res.render('admin/post/add', {
+            errors: errors,
+            category: req.body.category,
+            title: req.body.title,
+            content: req.body.content,
+        })
+    }
+
+    var title = req.body.title.trim();
+    var category = req.body.category.trim();
+    var content = req.body.content.trim();
+
+    User.findOne({}, function(err, author) {
+        if (err) {
+            return next(err)
+        }
+        var py = pinyin(title).map(function (item) {
+            return item[0]
+        }).join(' ');
+
+        var post = new Post({
+            title: title,
+            published: true,
+            category: category,
+            content: content,
+            author: author,
+            meta: { favorite: 0 },
+            comments: [],
+            created: new Date(),
+            slug: slug(py),
+        });
+
+        post.save(function(err, post) {
+            if (err) {
+                req.flash('error', '文章保存失败');
+                res.redirect('/admin/posts/add');
+            } else {
+                req.flash('info', '文章保存成功');
+                res.redirect('/admin/posts');
+            }
+            
+        });
+    });
 }); 
+
+function getPostById(req, res, next) {
+    if(!req.params.id) {
+        return next(new Error('no post id provide'));
+    }
+    
+    Post.findOne({ _id: req.params.id })
+    .populate('category')
+    .populate('author')
+    .exec(function(err, post) {
+        if(err) {
+            return next(err);
+        }
+        if(!post) {
+            return next(new Error('post not found', req.params.id));
+        }
+        req.post = post;
+        next();
+    });
+}

@@ -11,14 +11,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/about', function (req, res, next) {
-    res.render('blog/index', {
+    res.render('blog/about', {
       title: 'About Me',
       pretty: true,
     });
 });
 
 router.get('/contact', function (req, res, next) {
-    res.render('blog/index', {
+    res.render('blog/contact', {
       title: 'Contact',
       pretty: true,
     });

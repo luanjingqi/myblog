@@ -18,6 +18,16 @@ body {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
+#message .error li{
+  list-style: none;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
 
 /*
  * Top navigation

@@ -217,3 +217,25 @@ h6, .h6 {
 .post-view-header{
     text-align: center;
 }
+.list-unstyled li{
+    text-align: center;
+    padding-top: 5px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    border-style: solid;
+    border-top-width: thin;
+    border-right-width: thin;
+    border-bottom-width: 5px;
+    border-left-width: 4px;
+    border-color: #DDDDDD;
+    border-radius: 5px
+}
+.sidebar-module.sidebar-module-inset{
+    border-style: solid;
+    border-top-width: thin;
+    border-right-width: thin;
+    border-bottom-width: 5px;
+    border-left-width: 4px;
+    border-color: #DDDDDD;
+    border-radius: 5px
+}

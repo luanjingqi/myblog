@@ -39,7 +39,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/category/:name', function (req, res, next) {
-	Category.findOne({ name: req.params.name}).exec(function(err, category) {
+	Category.findOne({ name: req.params.name }).exec(function(err, category) {
 		if(err) {
 			return next(err);
 		}

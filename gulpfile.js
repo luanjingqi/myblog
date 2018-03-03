@@ -9,7 +9,7 @@ gulp.task('develop', function () {
   nodemon({
     script: 'app.js',
     ext: 'js coffee jade',
-    stdout: false
+    stdout: true
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
       if(/^Express server listening on port/.test(chunk)){
